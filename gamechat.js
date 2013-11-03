@@ -1,3 +1,8 @@
+//var ipaddr = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+//var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+
+var PORT = process.env.OPENSHIFT_INTERNAL_PORT || process.env.OPENSHIFT_NODEJS_PORT  || 8080;
+var IPADDRESS = process.env.OPENSHIFT_INTERNAL_IP || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 // We need to use the express framework: have a real web servler that knows how to send mime types etc.
 var express=require('express');
@@ -16,14 +21,12 @@ app.configure(function () {
 });    
 /**/
 
-// launch the http server on given port
-server.listen(8080);
 
-/*// routing with express, mapping for default page
-app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/multiRoomChat.html');
-});
-/**/
+ 
+// launch the http server on given port
+//Get the environment variables we need.
+//server.listen(8080);
+server.listen(PORT, IPADDRESS);
 
 // routing
 app.get('/', function (req, res) {
@@ -47,10 +50,6 @@ function clone(obj){
     var copy = JSON.parse(JSON.stringify(obj));
     return copy;
 }
-
-
-
-
 
 var listeObstacles = {};  
 
@@ -76,10 +75,6 @@ listeObstacles[6] = new common.rectangle(350,200,100,100,1,1,true,common.createU
 
 // Sauvegarde du tableau d'obstacle de départ pour les resets...
 var listeObstacleDepart = clone(listeObstacles);
-// listeObstacles = {};
-
-
-
 
 var listeDebris = {};
 var listObservers = {};
@@ -96,9 +91,6 @@ var getNbPlayers = function(listePlayers){
         }
     return nbPlayers;
 }
-
-
-// var rooms = ['piste1','piste2','piste3'];
 
 io.sockets.on('connection', function (socket) {
 
